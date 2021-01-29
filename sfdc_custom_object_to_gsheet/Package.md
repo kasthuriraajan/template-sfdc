@@ -74,7 +74,7 @@ Select OAuth client Id.
 1. Create new spreadsheet. Type ``sheets.new`` in browser.
 2. Rename the sheet if you want.
 3. Copy the ID of the spreadsheet.
-![alt text](https://github.com/kasthuriraajan/template-sfdc/tree/main/sfdc_custom_object_to_gsheet/blob/master/docs/images/spreadsheet_id_example.jpeg?raw=true)
+![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_custom_object_to_gsheet/docs/images/spreadsheet_id_example.jpeg?raw=true)
 and sheetname.
 4. Once you obtained all configurations, Create `ballerina.conf` in root directory.
 5. Replace "" in the `ballerina.conf` file with your data.
