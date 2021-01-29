@@ -1,0 +1,9 @@
+[package]
+org = "nuwant"
+name = "sfdc_custom_object_to_gsheet"
+version = "0.1.0"
+
+[build-options]
+observabilityIncluded = true
+
+
