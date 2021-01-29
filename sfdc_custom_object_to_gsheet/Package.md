@@ -4,6 +4,9 @@
 
 This integration template listens to the created Salesforce Custom Objects and Insert them to a google sheet.
 
+![alt text](https://github.com/kasthuriraajan/template-sfdc/tree/main/sfdc_custom_object_to_gsheet/blob/master/docs/images/integration_scenario.png?raw=true)
+
+
 ## Prerequisites
 
 - [Ballerina Distribution](https://ballerina.io/learn/getting-started/)
@@ -71,7 +74,7 @@ Select OAuth client Id.
 1. Create new spreadsheet. Type ``sheets.new`` in browser.
 2. Rename the sheet if you want.
 3. Copy the ID of the spreadsheet.
-![alt text](https://github.com/SkNuwanTissera/ecs-template-sfdc-custom-to-gsheets/blob/master/docs/images/spreadsheetID.jpeg?raw=true)
+![alt text](https://github.com/kasthuriraajan/template-sfdc/tree/main/sfdc_custom_object_to_gsheet/blob/master/docs/images/spreadsheet_id_example.jpeg?raw=true)
 and sheetname.
 4. Once you obtained all configurations, Create `ballerina.conf` in root directory.
 5. Replace "" in the `ballerina.conf` file with your data.
