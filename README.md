@@ -1,3 +1,9 @@
-# Templates for Salesforce as source connector
+# Templates for Salesforce connector
 
-You can find each templates as each package within this repo. Follow the instructions in the Package.md file to run these templates. 
+Salesfiorce connector can be used to number of integrations along with other connectors. Some templates are provided in this repository to make easy your integration experience with Salesforce connector. Each template is developed to solve a unique bussiness usecase.
+
+## How to use these templates?
+1. Download this repository. Each directory inside this repository contains each template.
+2. Go inside a template directory you want to use.
+3. Follow the instructions given in the documentation within each directory(README.md or Package.md).
+4. Get your integration work done. 
