@@ -4,7 +4,7 @@
 
 This integration template listens to the created Salesforce Custom Objects and Insert them to a google sheet.
 
-![alt text](https://github.com/kasthuriraajan/template-sfdc/tree/main/sfdc_custom_object_to_gsheet/blob/master/docs/images/integration_scenario.png?raw=true)
+![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_custom_object_to_gsheet/docs/images/integration_scenario.png?raw=true)
 
 
 ## Prerequisites
