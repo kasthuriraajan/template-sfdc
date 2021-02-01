@@ -1,9 +1,24 @@
+// Copyright (c) 2021 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//
+// WSO2 Inc. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import ballerina/config;
 import ballerina/io;
+import ballerina/log;
 import ballerinax/sfdc;
 import ballerinax/googleapis_sheets as sheets4;
-
-const string CREATED = "created";
 
 sfdc:SalesforceConfiguration sfConfig = {
     baseUrl: config:getAsString("SF_EP_URL"),
@@ -47,41 +62,41 @@ service on sfdcEventListener {
         if (caseInfo is json) {
             if(CREATED.equalsIgnoreCaseAscii(caseInfo.event.'type.toString())){
                 var caseId = caseInfo.sobject.Id;
-                io:println(caseId);
+                log:print("Case ID = "+caseId.toString());
                 var caseRecord = sfdcClient->getRecordById("Case",caseId.toString());
                 if(caseRecord is json){
-                    createSheetWithNewCase(caseRecord);
+                   [string,string]|error? response = createSheetWithNewCase(caseRecord);
+                   if (response is [string, string]) {
+                      log:print("Spreadsheet with ID "+response[0]+" is created for new Salesforce Case Number "
+                      +response[1]); 
+                   }
+                   else{
+                       log:printError(response.toString());
+                   }
                 }
                 else {
-                    io:println(caseRecord);
+                    log:printError(caseRecord.toString());
                 }
             }        
         }
         else
         {
-            io:println(caseInfo);
+            log:printError(caseInfo.toString());
         }
     }
 }
 
-function createSheetWithNewCase(json case){
-    var spreadsheet = gSheetClient->createSpreadsheet(case.CaseNumber.toString());
-    if(spreadsheet is sheets4:Spreadsheet){
-        var sheet = spreadsheet.getSheetByName("Sheet1");
-        if(sheet is sheets4:Sheet){
-            map<json> caseMap = <map<json>> case;
-            foreach var [key, value] in caseMap.entries() {
-                var response = sheet->appendRow([key, value.toString()]);
-                io:println(response);
-            }
-            var rename = sheet->rename("Case Details");
-            io:println(rename);    
+function createSheetWithNewCase(json case) returns @tainted [string,string] | error?{
+    string caseNumber = case.CaseNumber.toString();
+    sheets4:Spreadsheet spreadsheet = check gSheetClient->createSpreadsheet("Salesforce Case "+caseNumber);
+    string spreadsheetId = spreadsheet.spreadsheetId;
+    sheets4:Sheet sheet = check spreadsheet.getSheetByName("Sheet1");
+    map<json> caseMap = <map<json>> case;
+    foreach var [key, value] in caseMap.entries() {
+        var response = sheet->appendRow([key, value.toString()]);
+        if(response is error){
+            log:printError(response.message());
         }
-        else {
-            io:println(sheet);
-        }
-    }
-    else {
-        io:println(spreadsheet);
-    }
+    } 
+    return [spreadsheetId, caseNumber];
 }
