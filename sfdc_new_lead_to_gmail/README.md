@@ -4,8 +4,7 @@
 
 This integration template listens to the created Salesforce Leads and Send them Gmail alerts.
 
-![Alt](/docs/images/integration_scenario.png?raw=true)
-
+![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_new_lead_to_gmail/docs/images/integration_scenario.png?raw=true)
 
 ## Prerequisites
 
