@@ -105,3 +105,14 @@ Successful listener startup will print following in the console.
 3. Now you can add new leads in Salesforce and observe that integration template runtime has received the event notification for the broadcasted Leads.
 
 4.  You can check the Gmail to verify that the received email. 
+
+Sample logs
+
+```
+>>>>
+time = 2021-02-03 12:19:37,354 level = INFO  module = nuwant/sfdc_new_lead_to_gmail message = "New Lead : {"event":{"createdDate":"2021-02-03T06:49:36.232Z","replayId":11,"type":"created"},"sobject":{"Status":"Open - Not Contacted","Company":"WSO2","Email":"sliit.sk95@gmail.com","Phone":"0775856964","Title":null,"Id":"00Q5g0000010x1nEAA","Name":"Nuwan Tissera"}}" 
+time = 2021-02-03 12:19:39,177 level = INFO  module = nuwant/sfdc_new_lead_to_gmail message = "17766a756fcc7420 17766a756fcc7420"
+<<<<
+```
+Sample Email format
+![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_new_lead_to_gmail/docs/images/email_template.png?raw=true)

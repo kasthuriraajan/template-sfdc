@@ -49,12 +49,12 @@ function sendGmailAlert(json newLead) returns @tainted error?{
     messageRequest.sender = config:getAsString("G_SENDER_EMAIL");
     messageRequest.cc = config:getAsString("G_CC_EMAIL");
     messageRequest.subject = "NEW LEAD from : " +newLead.sobject.Company.toString();
-    messageRequest.messageBody = "<h1> Welcome </h1> <br/> 
-                                  <h2> Name : " +newLead.sobject.Name.toString()+ "</h2> <br/>
-                                  <h2> Company : " +newLead.sobject.Name.toString()+ "</h2> <br/>
-                                  <h2> Phone : " +newLead.sobject.Name.toString()+ "</h2> <br/>
-                                  <h2> Lead Status : " +newLead.sobject.Name.toString()+ "</h2> <br/>
-                                  <h3> Thank you </h3>";
+    messageRequest.messageBody = "<h1> Welcome </h1> <br/>"+
+                                 "<h2> Name : " +newLead.sobject.Name.toString()+ "</h2> <br/>"+
+                                 "<h2> Company : " +newLead.sobject.Company.toString()+ "</h2> <br/>"+
+                                 "<h2> Phone : " +newLead.sobject.Phone.toString()+ "</h2> <br/>"+
+                                 "<h2> Lead Status : " +newLead.sobject.Status.toString()+ "</h2> <br/>"+
+                                 "<h3> Thank you </h3>";
     messageRequest.contentType = gmail:TEXT_HTML;
 
     //Send the message.
