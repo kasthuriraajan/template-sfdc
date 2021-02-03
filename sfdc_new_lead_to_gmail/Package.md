@@ -106,7 +106,13 @@ Successful listener startup will print following in the console.
 
 4.  You can check the Gmail to verify that the received email. 
 
-Sample logs
+#### Sample Email format
+
+This is the sample format of the email that you will receive.
+
+![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_new_lead_to_gmail/docs/images/email_template.png?raw=true)
+
+#### Sample logs
 
 ```
 >>>>
@@ -114,5 +120,3 @@ time = 2021-02-03 12:19:37,354 level = INFO  module = nuwant/sfdc_new_lead_to_gm
 time = 2021-02-03 12:19:39,177 level = INFO  module = nuwant/sfdc_new_lead_to_gmail message = "17766a756fcc7420 17766a756fcc7420"
 <<<<
 ```
-Sample Email format
-![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_new_lead_to_gmail/docs/images/email_template.png?raw=true)
