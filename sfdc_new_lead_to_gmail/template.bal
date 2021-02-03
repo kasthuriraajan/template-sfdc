@@ -43,13 +43,18 @@ service on sfdcEventListener {
 function sendGmailAlert(json newLead) returns @tainted error?{
 
     log:print("New Lead : " + newLead.toString());
-    
+
     gmail:MessageRequest messageRequest = {};
     messageRequest.recipient = newLead.sobject.Email.toString();
     messageRequest.sender = config:getAsString("G_SENDER_EMAIL");
     messageRequest.cc = config:getAsString("G_CC_EMAIL");
     messageRequest.subject = "NEW LEAD from : " +newLead.sobject.Company.toString();
-    messageRequest.messageBody = "<h1> Welcome </h1> <br/> <h2> Name : " +newLead.sobject.Name.toString()+ "</h2>";
+    messageRequest.messageBody = "<h1> Welcome </h1> <br/> 
+                                  <h2> Name : " +newLead.sobject.Name.toString()+ "</h2> <br/>
+                                  <h2> Company : " +newLead.sobject.Name.toString()+ "</h2> <br/>
+                                  <h2> Phone : " +newLead.sobject.Name.toString()+ "</h2> <br/>
+                                  <h2> Lead Status : " +newLead.sobject.Name.toString()+ "</h2> <br/>
+                                  <h3> Thank you </h3>";
     messageRequest.contentType = gmail:TEXT_HTML;
 
     //Send the message.
