@@ -1,11 +1,10 @@
-# Salesforce to Google Sheets - Create Google Sheets spreadsheet rows from new Salesforce custom objects
+# Salesforce to Gmail - Send Gmail email alerts for new Salesforce leads
 
 ## Integration Use Case 
 
-This integration template listens to the created Salesforce Custom Objects and Insert them to a google sheet.
+This integration template listens to the created Salesforce Leads and Send them Gmail alerts.
 
-![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_custom_object_to_gsheet/docs/images/integration_scenario.png?raw=true)
-
+![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_new_lead_to_gmail/docs/images/integration_scenario.png?raw=true)
 
 ## Prerequisites
 
@@ -22,41 +21,29 @@ Salesforce username, password and the security token that will be needed for ini
 
 For more information on the secret token, please visit [Reset Your Security Token](https://help.salesforce.com/articleView?id=user_security_token.htm&type=5).
 
-#### Create Custom Object in Salesforce
-1. From the top-right corner of any page in Setup, click Create > Custom Object.
-(If you cannot find, click settings icon and then click Service Setup. Then try step 1.)
-2. Complete the fields for your custom object and configure its features.
-3. If you want to create a custom tab for the object immediately after you save it, select Launch New Custom Tab Wizard after saving this custom object.
-4. You can also create the custom object tab later in Setup by entering Tabs in the Quick Find box, and clicking Tabs.
-5. Save the new object.
-6. In the Object Manager, click Fields & Relationships, and create the custom fields that your object needs.
-7. go to setup in salesforce. Search 'Tabs'.
-8. Add new custom object as a tab.
-
 #### Create Push Topic in Salesforce developer console
 
 The Salesforce trigger requires topics to be created for each event. We need to configure topic to listen on Custom Object entity.
 
 1. From the Salesforce UI, select developer console. Go to debug > Open Execute Anonymous Window. 
-2. Paste following apex code to create topic with <CustomObject> and execute.
-e.g : Consider created custom object as 'Customer'. Check for 'Field Name' in the Fields of the custom object. Normally if the custom object is 'Customer', table that we need to listen will be like 'Customer__c' as following.
+2. Paste following apex code to create topic and execute.
 ```apex
 PushTopic pushTopic = new PushTopic();
-pushTopic.Name = 'CustomerBroadcast';
-pushTopic.Query = 'SELECT Id, Name, City, Country, Email, Phone FROM Customer__c';
+pushTopic.Name = 'NewLeadInsert';
+pushTopic.Query = 'SELECT Id, Name, Title, Company, Phone, Email, Status FROM Lead';
 pushTopic.ApiVersion = 48.0;
-pushTopic.NotifyForOperationCreate = true;
+pushTopic.NotifyForOperationUpdate = true;
 pushTopic.NotifyForFields = 'Referenced';
 insert pushTopic;
 ```
 3. Once the creation is done, specify the topic name in the event listener service config.
 
-#### Setup Google Sheets Configurations
+#### Setup Gmail Configurations
 Create a Google account and create a connected app by visiting [Google cloud platform APIs and Services](https://console.cloud.google.com/apis/dashboard). 
 
 1. Click Library from the left side menu.
-2. In the search bar enter Google Sheets.
-3. Then select Google Sheets API and click Enable button.
+2. In the search bar enter Gmail.
+3. Then select Gmail API  and click Enable button.
 4. Complete OAuth Consent Screen setup.
 5. Click Credential tab from left side bar. In the displaying window click Create Credentials button
 Select OAuth client Id.
@@ -65,21 +52,16 @@ Select OAuth client Id.
 8. Visit https://developers.google.com/oauthplayground/ 
     Go to settings (Top right corner) -> Tick 'Use your own OAuth credentials' and insert Oauth ClientId and secret.Click close.
 9. Then,Complete Step1 (Select and Authotrize API's)
-10. Make sure you select https://www.googleapis.com/auth/drive & https://www.googleapis.com/auth/spreadsheets Oauth scopes.
+10. Select the required Gmail API scopes from the list of API's, and then click Authorize APIs.
+Make sure you select https://mail.google.com/ (full privilage) or https://www.googleapis.com/auth/gmail.send(Specific privilage only)
 11. Click Authorize API's and You will be in Step 2.
 12. Exchange Auth code for tokens.
 13. Copy Access token and Refresh token. Put it on the config(ballerina.conf) file.
 
-
 ## Configuring the Integration Template
 
-1. Create new spreadsheet. Type ``sheets.new`` in browser.
-2. Rename the sheet if you want.
-3. Copy the ID of the spreadsheet.
-![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_custom_object_to_gsheet/docs/images/spreadsheet_id_example.jpeg?raw=true)
-and sheetname.
-4. Once you obtained all configurations, Create `ballerina.conf` in root directory.
-5. Replace "" in the `ballerina.conf` file with your data.
+1. Once you obtained all configurations, Create `ballerina.conf` in root directory.
+2. Replace "" in the `ballerina.conf` file with your data.
 
 ##### ballerina.conf
 
@@ -89,19 +71,16 @@ SF_USERNAME=""
 SF_PASSWORD=""
 SF_BROADCAST_TOPIC=""
 
-DB_USER=""
-DB_PWD=""
+G_ACCESS_TOKEN = ""
+G_CLIENT_ID = ""
+G_CLIENT_SECRET = ""
+G_REFRESH_TOKEN = ""
+G_REFRESH_URL = ""
 
-GS_ACCESS_TOKEN = ""
-GS_CLIENT_ID = ""
-GS_CLIENT_SECRET = ""
-GS_REFRESH_TOKEN = ""
-GS_REFRESH_URL = ""
-GS_SPREADSHEET_ID = ""
-GS_SHEET_NAME = ""
+G_SENDER_EMAIL = ""
+G_CC_EMAIL = ""
 
 ```
-
 
 ## Running the Template
 
@@ -109,7 +88,7 @@ GS_SHEET_NAME = ""
 `$ ballerina build`. 
 
 2. Then you can run the integration binary with the following command. 
-`$ ballerina run /target/bin/sfdc_custom_object_to_gsheet.jar`. 
+`$ ballerina run target/bin/sfdc_new_lead_to_gmail.jar`. 
 
 Successful listener startup will print following in the console.
 ```
@@ -123,6 +102,21 @@ Successful listener startup will print following in the console.
 <<<<
 ```
 
-3. Now you can add new records to created custom object in Salesforce Account and observe that integration template runtime has received the event notification for the broadcasted Salesforce Custom Object.
+3. Now you can add new leads in Salesforce and observe that integration template runtime has received the event notification for the broadcasted Leads.
 
-4.  You can check the Google Sheet to verify that the braodcasted Custom Objects are added to the Specied Sheet. 
+4.  You can check the Gmail to verify that the received email. 
+
+#### Sample Email format
+
+This is the sample format of the email that you will receive.
+
+![alt text](https://github.com/SkNuwanTissera/template-sfdc/blob/main/sfdc_new_lead_to_gmail/docs/images/email_template.png?raw=true)
+
+#### Sample logs
+
+```
+>>>>
+time = 2021-02-03 12:19:37,354 level = INFO  module = nuwant/sfdc_new_lead_to_gmail message = "New Lead : {"event":{"createdDate":"2021-02-03T06:49:36.232Z","replayId":11,"type":"created"},"sobject":{"Status":"Open - Not Contacted","Company":"WSO2","Email":"sliit.sk95@gmail.com","Phone":"0775856964","Title":null,"Id":"00Q5g0000010x1nEAA","Name":"Nuwan Tissera"}}" 
+time = 2021-02-03 12:19:39,177 level = INFO  module = nuwant/sfdc_new_lead_to_gmail message = "17766a756fcc7420 17766a756fcc7420"
+<<<<
+```
