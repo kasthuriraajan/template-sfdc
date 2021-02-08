@@ -30,6 +30,8 @@ For more information on the secret token, please visit [Reset Your Security Toke
 4. You can also create the custom object tab later in Setup by entering Tabs in the Quick Find box, and clicking Tabs.
 5. Save the new object.
 6. In the Object Manager, click Fields & Relationships, and create the custom fields that your object needs.
+7. go to setup in salesforce. Search 'Tabs'.
+8. Add new custom object as a tab.
 
 #### Create Push Topic in Salesforce developer console
 
